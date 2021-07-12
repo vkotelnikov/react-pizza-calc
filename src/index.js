@@ -14,8 +14,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function Legend() {
   const labels = [null, 'Цена', 'Радиус', 'Размер', 'Площадь', 'Цена/кв.см',];
   return labels.map(function(label, index) {
-      return (<Row key={index} className="justify-content-right">
-          <Col align="center">
+      return (
+        <Row key={index}>
+          <Col>
             {label}
           </Col>
         </Row>
@@ -135,7 +136,7 @@ class PizzaCardRow extends React.Component {
 
     let pizzas = this.state.pizzaCards.map((pizza, index) => {
       return (
-        <Col key={index} style={styles[index].style}>
+        <Col className="pl-1 pr-1" key={index} style={styles[index].style}>
             <PizzaCard id={index} price={this.state.pizzaCards[index].price} radius={this.state.pizzaCards[index].radius} square={params[index].square} pricePerSquareCm={params[index].pricePerSquareCm} maxRadius={pizza.maxRadius} onPriceChange={this.handlePriceChange} onRadiusChange={this.handleRadiusChange}/>
         </Col>
       );
@@ -146,8 +147,13 @@ class PizzaCardRow extends React.Component {
 }
 
 ReactDOM.render(
-  <Container fluid="sm">
+  <Container fluid>
     <React.StrictMode>
+      <Row>
+        <Col align="center">
+          <h1>Узнай какая пицца выгоднее</h1>
+        </Col>
+      </Row>
       <Row className="flex-nowrap justify-content-center align-items-end">
         <Col xs="4" >
           <Legend />
