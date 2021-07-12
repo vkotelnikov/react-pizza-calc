@@ -14,96 +14,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function Legend() {
   const labels = [null, 'Цена', 'Радиус', 'Размер', 'Площадь', 'Цена/кв.см',];
   return labels.map(function(label, index) {
-      return <Row key={index} className="justify-content-right">
+      return (<Row key={index} className="justify-content-right">
           <Col align="center">
             {label}
           </Col>
         </Row>
+      )
   });
-}
-
-class PizzaCardRow extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      pizzaCards: [
-        {
-          price: 500,
-          radius: 25,
-          maxRadius: 40,
-          style: null,
-        },
-        {
-          price: 500,
-          radius: 25,
-          maxRadius: 40,
-          style: null,
-        },
-      ]
-    };
-
-    this.handlePriceChange = this.handlePriceChange.bind(this);
-    this.handleRadiusChange = this.handleRadiusChange.bind(this);
-  }
-
-  handlePriceChange(newPrice, index) {
-    let newPizzaCards = this.state.pizzaCards.slice();
-    newPizzaCards[index].price = newPrice;
-    this.setState({pizzaCards: newPizzaCards});
-  }
-
-  handleRadiusChange(newRadius, index) {
-    let newPizzaCards = this.state.pizzaCards.slice();
-    newPizzaCards[index].radius = newRadius;
-    this.setState({pizzaCards: newPizzaCards});
-  }
-
-  getPricePerCmAndSquare(pizza) {
-    let square = Math.round(Math.PI * Math.pow(pizza.radius / 2, 2));
-    let pricePerSquareCm = (pizza.price / square).toPrecision(2);
-    return {
-      pricePerSquareCm: pricePerSquareCm,
-      square: square,
-    }
-  };
-
-  render() {
-    let params = [this.getPricePerCmAndSquare(this.state.pizzaCards[0]), this.getPricePerCmAndSquare(this.state.pizzaCards[1]), ];
-
-    let styles=[{},{}];
-    
-    if (params[0].pricePerSquareCm > params[1].pricePerSquareCm) {
-      let ratio = Math.pow(0.6, 2) * (100 - (params[1].pricePerSquareCm * 100 / params[0].pricePerSquareCm)) / 100;
-    
-      // console.log('red ratio left',ratio);
-      styles[0].style = {
-        backgroundImage: 'linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0),rgba(0,0,0,0),rgba(0,0,0,0), rgba(255,0,0,' + (ratio) + '))',
-      };
-      styles[1].style = {
-        backgroundImage: 'linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0),rgba(0,0,0,0),rgba(0,0,0,0), rgba(0,255,0,' + (ratio) + '))',
-      };
-    } else {
-      let ratio = Math.pow(0.6, 2) * (100 - (params[0].pricePerSquareCm * 100 / params[1].pricePerSquareCm)) / 100;
-      // console.log('red ratio right',ratio);
-      styles[0].style = {
-        backgroundImage: 'linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0),rgba(0,0,0,0),rgba(0,0,0,0), rgba(0,255,0,' + (ratio) + '))',
-      };
-      styles[1].style = {
-        backgroundImage: 'linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0),rgba(0,0,0,0),rgba(0,0,0,0), rgba(255,0,0,' + (ratio) + '))',
-      };
-    }
-
-
-    let pizzas = this.state.pizzaCards.map((pizza, index) => {
-
-      return (
-      <Col key={index} style={styles[index].style}>
-          <PizzaCard id={index} price={this.state.pizzaCards[index].price} radius={this.state.pizzaCards[index].radius} square={params[index].square} pricePerSquareCm={params[index].pricePerSquareCm} maxRadius={pizza.maxRadius} onPriceChange={this.handlePriceChange} onRadiusChange={this.handleRadiusChange}/>
-      </Col>);
-    });
-
-    return pizzas;
-  }
 }
 
 class PizzaCard extends React.Component {
@@ -151,6 +68,82 @@ class PizzaCard extends React.Component {
   }
 }
 
+class PizzaCardRow extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      pizzaCards: [
+        {
+          price: 500,
+          radius: 25,
+          maxRadius: 40,
+        },
+        {
+          price: 500,
+          radius: 25,
+          maxRadius: 40,
+        },
+      ]
+    };
+
+    this.handlePriceChange = this.handlePriceChange.bind(this);
+    this.handleRadiusChange = this.handleRadiusChange.bind(this);
+  }
+
+  handlePriceChange(newPrice, index) {
+    let newPizzaCards = this.state.pizzaCards.slice();
+    newPizzaCards[index].price = newPrice;
+    this.setState({pizzaCards: newPizzaCards});
+  }
+
+  handleRadiusChange(newRadius, index) {
+    let newPizzaCards = this.state.pizzaCards.slice();
+    newPizzaCards[index].radius = newRadius;
+    this.setState({pizzaCards: newPizzaCards});
+  }
+
+  getPricePerCmAndSquare(pizza) {
+    let square = Math.round(Math.PI * Math.pow(pizza.radius / 2, 2));
+    let pricePerSquareCm = (pizza.price / square).toPrecision(2);
+    return {
+      pricePerSquareCm: pricePerSquareCm,
+      square: square,
+    }
+  };
+
+  prepareStyles(styles, params, cheaperPizzaIndex, costlyPizzaIndex) {
+    let ratio = Math.pow(0.6, 2) * (100 - (params[cheaperPizzaIndex].pricePerSquareCm * 100 / params[costlyPizzaIndex].pricePerSquareCm)) / 100;
+    
+    styles[costlyPizzaIndex].style = {
+      backgroundImage: 'linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0),rgba(0,0,0,0),rgba(0,0,0,0), rgba(255,0,0,' + (ratio) + '))',
+    };
+    styles[cheaperPizzaIndex].style = {
+      backgroundImage: 'linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0),rgba(0,0,0,0),rgba(0,0,0,0), rgba(0,255,0,' + (ratio) + '))',
+    };
+  }
+
+  render() {
+    let params = [this.getPricePerCmAndSquare(this.state.pizzaCards[0]), this.getPricePerCmAndSquare(this.state.pizzaCards[1]), ];
+
+    let styles=[{},{}];
+    
+    if (params[0].pricePerSquareCm > params[1].pricePerSquareCm) {
+      this.prepareStyles(styles, params, 1, 0);
+    } else {
+      this.prepareStyles(styles, params, 0, 1);
+    }
+
+    let pizzas = this.state.pizzaCards.map((pizza, index) => {
+      return (
+        <Col key={index} style={styles[index].style}>
+            <PizzaCard id={index} price={this.state.pizzaCards[index].price} radius={this.state.pizzaCards[index].radius} square={params[index].square} pricePerSquareCm={params[index].pricePerSquareCm} maxRadius={pizza.maxRadius} onPriceChange={this.handlePriceChange} onRadiusChange={this.handleRadiusChange}/>
+        </Col>
+      );
+    });
+
+    return pizzas;
+  }
+}
 
 ReactDOM.render(
   <Container fluid="sm">
