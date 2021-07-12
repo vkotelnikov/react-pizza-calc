@@ -11,3 +11,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.red-pizza {
+  background-image: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0),rgba(0,0,0,0),rgba(255,0,0,0), rgba(255,0,0,0.5));
+}
+
+.green-pizza {
+  background-image: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0),rgba(0,0,0,0),rgba(255,0,0,0), rgba(0,255,0,0.5));
+}
