@@ -147,7 +147,7 @@ class PizzaCardRow extends React.Component {
 }
 
 ReactDOM.render(
-  <Container fluid>
+  <Container fluid="md">
     <React.StrictMode>
       <Row>
         <Col align="center">
