@@ -104,7 +104,7 @@ class PizzaCardRow extends React.Component {
   }
 
   getPricePerCmAndSquare(pizza) {
-    let square = Math.round(Math.PI * Math.pow(pizza.radius / 2, 2));
+    let square = Math.round(Math.PI * Math.pow(pizza.radius, 2));
     let pricePerSquareCm = (pizza.price / square).toPrecision(2);
     return {
       pricePerSquareCm: pricePerSquareCm,
