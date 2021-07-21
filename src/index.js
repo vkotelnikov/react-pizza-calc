@@ -7,12 +7,15 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
-import Form from 'react-bootstrap/Form'
+import Form from 'react-bootstrap/Form';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Legend() {
-  const labels = [null, 'Цена', 'Радиус', 'Размер', 'Площадь', 'Цена/кв.см',];
+  const labels = ['Цена', 'Радиус', 'Размер', 'Площадь', 'Цена/кв.см',
+  ];
   return labels.map(function(label, index) {
       return (
         <Row key={index}>
@@ -53,14 +56,14 @@ class PizzaCard extends React.Component {
       this.props.radius + ' см',
       <Form.Control id="slider" type="range" value={this.props.radius} onChange={this.handleRadiusChange} min="15" max={this.props.maxRadius}/>,
       this.props.square,
-      this.props.pricePerSquareCm
+      this.props.bold ? <b>{this.props.pricePerSquareCm}</b> : this.props.pricePerSquareCm,
     ]
 
   return items.map(function(item, index) {
     return (
       <Row key={index} noGutters>
         <Col align="center">
-            {item}
+          {item}
         </Col>
       </Row>
     )
@@ -113,7 +116,9 @@ class PizzaCardRow extends React.Component {
   };
 
   prepareStyles(styles, params, cheaperPizzaIndex, costlyPizzaIndex) {
-    let ratio = Math.pow(0.6, 2) * (100 - (params[cheaperPizzaIndex].pricePerSquareCm * 100 / params[costlyPizzaIndex].pricePerSquareCm)) / 100;
+    let ratio = 1 - (params[cheaperPizzaIndex].pricePerSquareCm / params[costlyPizzaIndex].pricePerSquareCm);
+    console.log();
+    if (ratio > 0 && ratio < 0.3) ratio = 0.3;
     
     styles[costlyPizzaIndex].style = {
       backgroundImage: 'linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0),rgba(0,0,0,0),rgba(0,0,0,0), rgba(255,0,0,' + (ratio) + '))',
@@ -121,6 +126,7 @@ class PizzaCardRow extends React.Component {
     styles[cheaperPizzaIndex].style = {
       backgroundImage: 'linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0),rgba(0,0,0,0),rgba(0,0,0,0), rgba(0,255,0,' + (ratio) + '))',
     };
+    styles[cheaperPizzaIndex].bold = true;
   }
 
   render() {
@@ -137,7 +143,7 @@ class PizzaCardRow extends React.Component {
     let pizzas = this.state.pizzaCards.map((pizza, index) => {
       return (
         <Col className="pl-1 pr-1" key={index} style={styles[index].style}>
-            <PizzaCard id={index} price={this.state.pizzaCards[index].price} radius={this.state.pizzaCards[index].radius} square={params[index].square} pricePerSquareCm={params[index].pricePerSquareCm} maxRadius={pizza.maxRadius} onPriceChange={this.handlePriceChange} onRadiusChange={this.handleRadiusChange}/>
+            <PizzaCard id={index} price={this.state.pizzaCards[index].price} radius={this.state.pizzaCards[index].radius} square={params[index].square} pricePerSquareCm={params[index].pricePerSquareCm} maxRadius={pizza.maxRadius} bold={styles[index].bold} onPriceChange={this.handlePriceChange} onRadiusChange={this.handleRadiusChange}/>
         </Col>
       );
     });
