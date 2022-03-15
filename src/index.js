@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import pizzaImg from './index.jpeg';
+import pizzaImg2 from './index2.jpeg';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -12,6 +13,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import firebaseConfig from './firebaseConfig';
 
 function Legend() {
   const labels = ['Цена', 'Радиус', 'Размер', 'Площадь', 'Цена/кв.см',
@@ -50,8 +52,10 @@ class PizzaCard extends React.Component {
       transform: "scale(" + pizzaScale + ")"
     }
 
+    let img = this.props.id < 1 ? pizzaImg : pizzaImg2;
+
     let items = [
-      <Image fluid src={pizzaImg} style={pizzaStyle} id="pizzaImage" alt="pizzaImage"/>,
+      <Image fluid src={img} style={pizzaStyle} id="pizzaImage" alt="pizzaImage"/>,
       <Form.Control type="number" id="price" value={this.props.price} onChange={this.handlePriceChange}/>,
       this.props.radius + ' см',
       <Form.Control id="slider" type="range" value={this.props.radius} onChange={this.handleRadiusChange} min="15" max={this.props.maxRadius}/>,
@@ -153,11 +157,11 @@ class PizzaCardRow extends React.Component {
 }
 
 ReactDOM.render(
-  <Container fluid="md">
+  <Container fluid="md" className="my-5">
     <React.StrictMode>
-      <Row>
+      <Row className="mt-5">
         <Col align="center">
-          <h1>Узнай какая пицца выгоднее</h1>
+          <h1>Узнай, какая пицца выгоднее</h1>
         </Col>
       </Row>
       <Row className="flex-nowrap justify-content-center align-items-end">
@@ -175,3 +179,4 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+firebaseConfig();
